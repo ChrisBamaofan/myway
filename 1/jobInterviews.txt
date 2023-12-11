@@ -1,0 +1,74 @@
+job interview review points
+
+一、 java相关知识点
+1） jvm结构
+2） 方法区，以及加载class的流程
+3） final的作用
+4） 并发的使用
+	future如何使用？线程池怎么用？
+5） springcloud
+	zuul，hytrix，
+
+
+二、 项目
+2.1	模块
+1）互联互通调度的实现方案，两张图，三方，guest host trigger，实现多方之间的，互联互通的基本使用，fate的基本架构，
+2）借助ck将大数据集合并
+3）
+
+2.2	问题及排查思路
+1）postman卡死
+2）
+
+
+
+
+三、Flink（Spark，impala、prestro、hive,hudi、iceberg,多模态数据库）
+1）
+
+
+四、网络 理论和实践
+1.1）tcp ip的基础
+1.2）
+2.1）浏览器上访问一个百度，说一下整个流程
+
+
+五、DATAX
+
+
+
+
+六、FATE
+
+
+
+
+七、机器学习  理论和实践 (大模型算法知识点梳理，了解大概使用及模型的基本配置)
+1.1）千问、langchain如何用好大模型
+1.2）瓜书
+1.3）深度学习
+1.4）数值优化
+2.1）transformers 跑demo, hugging face开源社区
+2.2）调用chatgpt的接口
+2.3）九章原识大模型 https://github.com/DataCanvasIO/Alaya
+=====以上为何刚老师的建议学习路径====
+
+
+1.1）算法 基础看书和视频
+1.2）线性代数（https://open.163.com/newview/movie/free?pid=M6V0BQC4M&mid=M6V29E773）
+
+
+八、k8s 理论和实践
+																											 -> CNI
+1.1）kubectl deploy pod 的流程，从 kubectl -> api-server -> controller-manager -> scheduler -> kubelet -> 容器 -> CSI
+																											 -> CRI
+1.2）深入理解k8s （极客时间 张磊）
+
+
+
+2.1）部署以下的实例，通过k8s部署，以及FATE的部署
+
+
+九、数据库
+1）事务、
+缓存与数据库不一致 https://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&mid=2651961356&idx=1&sn=8fa6a57d128a3255a049bee868a7a917&chksm=bd2d0dd08a5a84c62c1ac1d90b9f4c11915c9e6780759d167da5343c43445759bce0f16de395&scene=21#wechat_redirect

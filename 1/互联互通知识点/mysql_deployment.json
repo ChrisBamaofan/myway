@@ -1,0 +1,259 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mysql
+  namespace: fate-1000
+  uid: 91598a05-9fa8-4ed8-a955-9a3e91caf8d1
+  resourceVersion: '146323641'
+  generation: 1
+  creationTimestamp: '2023-04-07T05:17:08Z'
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    chart: fate
+    cluster: fate
+    fateMoudle: mysql
+    heritage: Helm
+    name: fate-1000
+    owner: kubefate
+    partyId: '1000'
+    release: fate-1000
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+    meta.helm.sh/release-name: fate-1000
+    meta.helm.sh/release-namespace: fate-1000
+  managedFields:
+    - manager: kubefate
+      operation: Update
+      apiVersion: apps/v1
+      time: '2023-04-07T05:17:08Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:meta.helm.sh/release-name': {}
+            'f:meta.helm.sh/release-namespace': {}
+          'f:labels':
+            .: {}
+            'f:app.kubernetes.io/managed-by': {}
+            'f:chart': {}
+            'f:cluster': {}
+            'f:fateMoudle': {}
+            'f:heritage': {}
+            'f:name': {}
+            'f:owner': {}
+            'f:partyId': {}
+            'f:release': {}
+        'f:spec':
+          'f:progressDeadlineSeconds': {}
+          'f:replicas': {}
+          'f:revisionHistoryLimit': {}
+          'f:selector': {}
+          'f:strategy':
+            'f:type': {}
+          'f:template':
+            'f:metadata':
+              'f:labels':
+                .: {}
+                'f:chart': {}
+                'f:cluster': {}
+                'f:fateMoudle': {}
+                'f:heritage': {}
+                'f:name': {}
+                'f:owner': {}
+                'f:partyId': {}
+                'f:release': {}
+            'f:spec':
+              'f:containers':
+                'k:{"name":"mysql"}':
+                  .: {}
+                  'f:env':
+                    .: {}
+                    'k:{"name":"MYSQL_ALLOW_EMPTY_PASSWORD"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"MYSQL_DATABASE"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"MYSQL_PASSWORD"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"MYSQL_USER"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"user"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                  'f:image': {}
+                  'f:imagePullPolicy': {}
+                  'f:name': {}
+                  'f:ports':
+                    .: {}
+                    'k:{"containerPort":3306,"protocol":"TCP"}':
+                      .: {}
+                      'f:containerPort': {}
+                      'f:protocol': {}
+                  'f:resources': {}
+                  'f:terminationMessagePath': {}
+                  'f:terminationMessagePolicy': {}
+                  'f:volumeMounts':
+                    .: {}
+                    'k:{"mountPath":"/docker-entrypoint-initdb.d/"}':
+                      .: {}
+                      'f:mountPath': {}
+                      'f:name': {}
+                    'k:{"mountPath":"/var/lib/mysql"}':
+                      .: {}
+                      'f:mountPath': {}
+                      'f:name': {}
+              'f:dnsPolicy': {}
+              'f:imagePullSecrets':
+                .: {}
+                'k:{"name":"myregistrykey"}':
+                  .: {}
+                  'f:name': {}
+              'f:restartPolicy': {}
+              'f:schedulerName': {}
+              'f:securityContext': {}
+              'f:serviceAccount': {}
+              'f:serviceAccountName': {}
+              'f:terminationGracePeriodSeconds': {}
+              'f:volumes':
+                .: {}
+                'k:{"name":"data"}':
+                  .: {}
+                  'f:name': {}
+                  'f:persistentVolumeClaim':
+                    .: {}
+                    'f:claimName': {}
+                'k:{"name":"mysql-confs"}':
+                  .: {}
+                  'f:configMap':
+                    .: {}
+                    'f:defaultMode': {}
+                    'f:name': {}
+                  'f:name': {}
+    - manager: kube-controller-manager
+      operation: Update
+      apiVersion: apps/v1
+      time: '2023-11-14T06:47:19Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:deployment.kubernetes.io/revision': {}
+        'f:status':
+          'f:availableReplicas': {}
+          'f:conditions':
+            .: {}
+            'k:{"type":"Available"}':
+              .: {}
+              'f:lastTransitionTime': {}
+              'f:lastUpdateTime': {}
+              'f:message': {}
+              'f:reason': {}
+              'f:status': {}
+              'f:type': {}
+            'k:{"type":"Progressing"}':
+              .: {}
+              'f:lastTransitionTime': {}
+              'f:lastUpdateTime': {}
+              'f:message': {}
+              'f:reason': {}
+              'f:status': {}
+              'f:type': {}
+          'f:observedGeneration': {}
+          'f:readyReplicas': {}
+          'f:replicas': {}
+          'f:updatedReplicas': {}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      fateMoudle: mysql
+      name: fate-1000
+      partyId: '1000'
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        chart: fate
+        cluster: fate
+        fateMoudle: mysql
+        heritage: Helm
+        name: fate-1000
+        owner: kubefate
+        partyId: '1000'
+        release: fate-1000
+    spec:
+      volumes:
+        - name: mysql-confs
+          configMap:
+            name: mysql-config
+            defaultMode: 420
+        - name: data
+          persistentVolumeClaim:
+            claimName: mysql-data
+      containers:
+        - name: mysql
+          image: 'registry.zet-fl.com/msmp/mysql:8.0.28'
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          env:
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: '1'
+            - name: MYSQL_DATABASE
+              value: eggroll_meta
+            - name: MYSQL_USER
+              value: fate
+            - name: MYSQL_PASSWORD
+              value: fate_dev
+            - name: user
+              value: root
+          resources: {}
+          volumeMounts:
+            - name: mysql-confs
+              mountPath: /docker-entrypoint-initdb.d/
+            - name: data
+              mountPath: /var/lib/mysql
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: default
+      serviceAccount: default
+      securityContext: {}
+      imagePullSecrets:
+        - name: myregistrykey
+      schedulerName: default-scheduler
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+status:
+  observedGeneration: 1
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 1
+  availableReplicas: 1
+  conditions:
+    - type: Progressing
+      status: 'True'
+      lastUpdateTime: '2023-04-07T05:17:19Z'
+      lastTransitionTime: '2023-04-07T05:17:08Z'
+      reason: NewReplicaSetAvailable
+      message: ReplicaSet "mysql-5b6479c964" has successfully progressed.
+    - type: Available
+      status: 'True'
+      lastUpdateTime: '2023-11-14T06:47:19Z'
+      lastTransitionTime: '2023-11-14T06:47:19Z'
+      reason: MinimumReplicasAvailable
+      message: Deployment has minimum availability.
