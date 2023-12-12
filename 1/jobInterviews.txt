@@ -23,8 +23,10 @@ job interview review points
 
 
 
-三、Flink（Spark，impala、prestro、hive,hudi、iceberg,多模态数据库）
+三、 Flink（Spark，impala、prestro、hive，hudi、iceberg，多模态数据库）
 1）
+
+
 
 
 四、网络 理论和实践
@@ -44,14 +46,21 @@ job interview review points
 
 
 七、机器学习  理论和实践 (大模型算法知识点梳理，了解大概使用及模型的基本配置)
+0） 七月在线 july大神的算法入门笔记 看完 https://blog.csdn.net/v_JULY_v/article/details/127411638  , 深入的话看 https://weibo.com/u/1580904460
 1.1）千问、langchain如何用好大模型
 1.2）瓜书
 1.3）深度学习
 1.4）数值优化
-2.1）transformers 跑demo, hugging face开源社区
+1.5）亮哥的分享 25分钟
+1.6）公司的开源大模型 （https://mp.weixin.qq.com/s/GcSOS5pPF8Azic_e9WSwAA）
+2.1）transformers 跑demo, hugging face开源社区  https://huggingface.co/
+	 什么是huggingface https://zhuanlan.zhihu.com/p/535100411
+	 hugginfacegithub https://github.com/huggingface/transformers/tree/v4.35.2
 2.2）调用chatgpt的接口
-2.3）九章原识大模型 https://github.com/DataCanvasIO/Alaya
+2.3）九章原识大模型 https://github.com/DataCanvasIO/Alaya     https://mp.weixin.qq.com/s/GcSOS5pPF8Azic_e9WSwAA
+
 =====以上为何刚老师的建议学习路径====
+
 
 
 1.1）算法 基础看书和视频
@@ -59,16 +68,15 @@ job interview review points
 
 
 八、k8s 理论和实践
-																											 -> CNI
+																											   -> CNI
 1.1）kubectl deploy pod 的流程，从 kubectl -> api-server -> controller-manager -> scheduler -> kubelet -> 容器 -> CSI
-																											 -> CRI
+																											   -> CRI
 1.2）深入理解k8s （极客时间 张磊）
-
 
 
 2.1）部署以下的实例，通过k8s部署，以及FATE的部署
 
 
 九、数据库
-1）事务、
+1）事务
 缓存与数据库不一致 https://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&mid=2651961356&idx=1&sn=8fa6a57d128a3255a049bee868a7a917&chksm=bd2d0dd08a5a84c62c1ac1d90b9f4c11915c9e6780759d167da5343c43445759bce0f16de395&scene=21#wechat_redirect
