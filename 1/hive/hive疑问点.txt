@@ -1,0 +1,152 @@
+环境搭建     					1周
+iceberge 环境搭建
+flink环境搭建到 cdh
+测试flink环境可以正常运行
+测试iceberge环境可以正常运行
+
+
+开发通过flinksql将kafka源入 iceberg的  					3周
+dds的结果数据是怎么样的？如何解析成99个表的数据
+dds的数据通过flink的
+
+
+1 确定 hdfs 和 hive 正常能用
+2 
+
+
+
+使用 iceberg 将数据实时动态写入 hive（hdfs）
+
+1.1 什么是hive?
+	hive 是针对于hdfs的 结构化数据 进行离线分析的数据仓库。底层数据存在hdfs上，上层的计算引擎依赖于mr ，hive将sql语句转换为mr程序。（mr执行的时候需要yarn做调度）
+
+1.2 什么是impala ?
+    
+1.3 什么是Dremel ？
+	Dremel 与 Mapreduce的主要不同在于它们的设计理念和实现方式。Mapreduce是一种分布式计算框架，它将数据处理任务分解为Map和Reduce两个阶段，Map阶段将数据映射为键值对，Reduce阶段将键值对进行聚合操作。Mapreduce的设计理念是将数据处理任务分发到多个计算节点上进行并行处理，以提高处理效率。
+相比之下，Dremel的设计理念是将数据存储和查询分离，使得数据可以被快速地查询和分析。Dremel使用了一种名为列式存储的数据存储格式，它将相同类型的数据存储在一起，以提高查询效率。Dremel的实现方式是将查询操作分解为多个子任务，并将这些子任务分发到多个计算节点上进行并行处理。
+
+2.1.1 什么是 hive Metastore?
+	描述 表跟文件之间的映射关系，描述 列和字段之间的关系。这些描述映射关系的数据的称之为Hive的元数据，该数据十分重要，因为只有通过查询它才可以确定用户编写sql和最终操作文件之间的关系。
+Metastore即元数据服务，是Hive用来管理库表元数据的一个服务。
+	查询的逻辑：用户写hql 到 driver -> compiler 将hql转为抽象语法树 -> 通过metastroe转为执行计划 -> 选择最有的计划 再给到 driver -> 给MR执行
+2.1.1.2 hive表底层存储原理
+1）内表：hdfs上的表
+外表：任意位置的表 	分区：内表所在目录下的子目录    bucket:
+2） 'hdfs://cdh001:8020/user/hive/warehouse/hive_1.db/hive_01'
+
+
+2.1.2
+hive catelog 配置
+
+2.1.3
+hive的 普通表配置
+
+2.2.1 impala基本概念
+Impala需要引用Hive的依赖包。Impala直接使用Hive元数据管理数据
+MPP (Massively Parallel Processing)，就是大规模并行处理，在MPP集群中，每个节点资源都是独享有也就是有独的磁盘和内存，每个节点通过络互相连接，彼此协同计算，作为整体提供数据服务。
+
+2.2.2
+impala查询
+
+impala是怎么，怎么操作实现查询hdfs、hive
+
+
+
+
+建表sql
+CREATE EXTERNAL TABLE if not exists student (
+     id STRING COMMENT 'id', 
+     name STRING,
+     age STRING, 
+     date STRING
+     )
+ COMMENT 'This is the test table'
+ PARTITIONED BY (id STRING, name STRING)
+ ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+ STORED AS TEXTFILE
+ LOCATION '/user/data/hive.txt';
+ 
+CREATE TABLE `hive_01`(
+  `id` int, 
+  `name` string)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe' 
+STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION 'hdfs://cdh001:8020/user/hive/warehouse/hive_1.db/hive_01'
+TBLPROPERTIES ('transient_lastDdlTime'='1692845646')
+
+-- 查看hive表结构
+describe formatted hive_01;
+
+-- hive外部表
+CREATE EXTERNAL TABLE external_table_name (
+  column1 data_type,
+  column2 data_type,
+  ...
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LOCATION '/path/to/table';
+
+
+-- 外部表示例
+CREATE EXTERNAL TABLE zhj_test (
+  id int,
+  job string
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+LOCATION '/user/zhj';
+
+drop table zhj_test; 不会删除数据文件，但是删除meta数据文件
+
+
+-- hive内部表
+CREATE TABLE internal_table_name (
+  column1 data_type,
+  column2 data_type,
+  ...
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+
+-- 内部表示例
+CREATE TABLE zhj_test_internal2 (
+  id int,
+  job string
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+
+insert into zhj_test_internal2 values(1,'2');
+hive> insert into zhj_test_internal2 values(1,'2');
+
+Query ID = root_20231213143515_1d653c96-04bd-4b73-80f2-b73a3166c310
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+23/12/13 14:35:16 INFO client.RMProxy: Connecting to ResourceManager at cdh001/172.20.29.46:8032
+23/12/13 14:35:16 INFO client.RMProxy: Connecting to ResourceManager at cdh001/172.20.29.46:8032
+Starting Job = job_1698468746170_3285, Tracking URL = http://cdh001:8088/proxy/application_1698468746170_3285/
+Kill Command = /opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/lib/hadoop/bin/hadoop job  -kill job_1698468746170_3285
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2023-12-13 14:35:26,509 Stage-1 map = 0%,  reduce = 0%
+2023-12-13 14:35:34,724 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 3.1 sec
+MapReduce Total cumulative CPU time: 3 seconds 100 msec
+Ended Job = job_1698468746170_3285
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to directory hdfs://cdh001:8020/user/hive/warehouse/hive_1.db/zhj_test_internal2/.hive-staging_hive_2023-12-13_14-35-15_687_8515544587331643862-1/-ext-10000
+Loading data to table hive_1.zhj_test_internal2
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1   Cumulative CPU: 3.1 sec   HDFS Read: 4328 HDFS Write: 85 HDFS EC Read: 0 SUCCESS
+Total MapReduce CPU Time Spent: 3 seconds 100 msec
+OK
+Time taken: 20.723 seconds
+
+
+
+内部表和外部表的区别
+

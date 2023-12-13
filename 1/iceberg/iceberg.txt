@@ -1,0 +1,85 @@
+flink/spark...
+	||
+    \/
+iceberg
+	||
+    \/
+
+hdfs/s3
+
+
+1.1 模式
+1)schema evolution add/drop/ column 不需要重写数据，而hive 在发生表结构变更时候，需要重写数据，这在数据量很大时，会非常致命。
+2)partition evolution  分区，一个表有分区的变化，则老数据走老的分区策略，新的数据会用新的分区策略
+3)排序策略（不用管先）
+4)隐藏分区（不用管先）
+
+
+1.2 存储结构
+快照(snapshot) ->  
+manifest list文件 即 快照  ->  manifest files （列出了组成快照的 数据文件的列表信息） -> data files( parquet/orc/AVRO ) 每次更新产生多个datafiles
+
+
+
+
+1.3 查询的流程
+1）读取清单文件 manifest file， 内容包含了  manifest file list文件的保存地址
+2）读取 manifest file list文件，内容包含了  具体的 manifest file的地址
+3）读取 manifest file 文件 ，内容包含了 具体的 datafile 的地址 ，
+
+（如果是hive查找，那就要定位到分区，再扫描分区目录，再拿到自己想要定位的文件）
+************************************************************************************
+2.1 iceberg 集成 hive的步骤
+2.1.1 jar版本
+用最新的
+
+2.1.2 上传iceberg的jar到 hive的 auxlib目录下
+iceberg-hive-runtime-1.1.0.jar
+libfb303-0.9.3.jar
+
+修改 hive-site.xml 为 hive.aux.jars.path  为存放这两个文件的路径
+
+
+2.1.3 做完上面两步后，可以进入hive，操作iceberg表了
+
+
+2.2.1 hiveCatalog 允许flink 将 flink运行时的数据保存在 hiveMetastore中；允许flink操作hive表
+
+2.2.2 hive 建一个iceberg表
+create table iceberg_test1(i int) STORED BY 'org.apache.iceberg.mr.hive.HiveIcebergStorageHandler';
+
+2.3 flink与iceberg集，
+1）P33前半部分，指定 hadoop的环境变量，解压对应的jar包
+2）将 iceberg-flink-bin-1.13.6-1.0.0.jar 放到 flink的 lib目录下，执行
+
+2.3.1 
+exection.checkpointing.interval: 30000 开启checkpoint
+
+
+************************************************************************************
+2.3.2 创建catalog
+2.3.2.1 flink操作hive catalog的依赖
+拷贝 flink-sql-connector-hive-2.1.1_2.12-1.13.6.jar 到 flink lib目录下(https://nightlies.apache.org/flink/flink-docs-release-1.13/docs/connectors/table/hive/overview/#dependencies)
+
+2.3.2.2 语句
+-- 进入 flink-sql 模式
+bash sql-client.sh embedded
+
+-- 建立 hive catalog
+create CATALOG hive_catalog WITH (
+'type'= 'iceberg',
+'catalog-type'='hive',
+'uri'='thrift://cdh1:9083',
+'clients'='5',
+'property-version'='1',
+'warehouse'='hdfs://cdh01:8020/user/hive/warehouse/'
+)
+
+-- 建立 Hadoop catalog
+create CATALOG hadoop_catalog WITH (
+'type'= 'iceberg',
+'catalog-type'='hadoop',
+'clients'='5',
+'property-version'='1',
+'warehouse'='hdfs://cdh01:8020/user/hive/warehouse/'
+)

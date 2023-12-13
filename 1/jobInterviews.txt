@@ -23,7 +23,7 @@ job interview review points
 
 
 
-三、 Flink（Spark，impala、prestro、hive，hudi、iceberg，多模态数据库）
+三、 Flink（Spark，impala、prestro、doris、hive，hudi、iceberg，多模态数据库）
 1）
 
 
