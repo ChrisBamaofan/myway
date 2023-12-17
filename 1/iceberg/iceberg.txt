@@ -1,43 +1,44 @@
-flink/spark...
-	||
-    \/
-iceberg
-	||
-    \/
-
-hdfs/s3
-
-
 1.1 模式
 1)schema evolution add/drop/ column 不需要重写数据，而hive 在发生表结构变更时候，需要重写数据，这在数据量很大时，会非常致命。
 2)partition evolution  分区，一个表有分区的变化，则老数据走老的分区策略，新的数据会用新的分区策略
 3)排序策略（不用管先）
 4)隐藏分区（不用管先）
 
-
 1.2 存储结构
 快照(snapshot) ->  
 manifest list文件 即 快照  ->  manifest files （列出了组成快照的 数据文件的列表信息） -> data files( parquet/orc/AVRO ) 每次更新产生多个datafiles
-
-
-
 
 1.3 查询的流程
 1）读取清单文件 manifest file， 内容包含了  manifest file list文件的保存地址
 2）读取 manifest file list文件，内容包含了  具体的 manifest file的地址
 3）读取 manifest file 文件 ，内容包含了 具体的 datafile 的地址 ，
-
 （如果是hive查找，那就要定位到分区，再扫描分区目录，再拿到自己想要定位的文件）
-************************************************************************************
+
+
 2.1 iceberg 集成 hive的步骤
 2.1.1 jar版本
 用最新的
 
-2.1.2 上传iceberg的jar到 hive的 auxlib目录下
+2.1.2 上传iceberg的jar到 hive 所在服务器的 /opt/module/hive/auxlib 路径
 iceberg-hive-runtime-1.1.0.jar
 libfb303-0.9.3.jar
 
+确保各个服务器上的该路径下均有文件存在
+scp -r /opt/module/hive/auxlib root@172.20.29.47:/opt/module/hive/
+scp -r /opt/module/hive/auxlib root@172.20.29.48:/opt/module/hive/
+scp -r /opt/module/hive/auxlib root@172.20.29.49:/opt/module/hive/
+
 修改 hive-site.xml 为 hive.aux.jars.path  为存放这两个文件的路径
+<property>
+    <name>iceberg.engine.hive.enabled</name>
+    <value>true</value>
+</property>
+<property>
+    <name>hive.aux.jars.path</name>
+    <value>/opt/module/hive/auxlib</value>
+</property>
+
+
 
 
 2.1.3 做完上面两步后，可以进入hive，操作iceberg表了
